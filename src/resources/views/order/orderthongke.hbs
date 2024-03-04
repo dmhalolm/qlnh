@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="/css/order.css">
+
+{{> header}}
+
+<div class="container">
+    <h4  style="text-align: center;" class="">CHI TIẾT HÓA ĐƠN</h4>
+    <div class="ordername">Tên hóa đơn: {{orders.name}}</div>
+    <div class="row">
+        <table id="productTable" class="table">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên món</th>
+                <th scope="col">Giá món</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders.dishes}}
+                    <tr>
+                    <td>{{sum @index 1}}</td>
+                    <td>{{this.nameDish}}</td>
+                    <td>{{this.priceDish}} đ</td>
+                    <td>{{this.quantityDish}}</td>
+                    <td class="sumPrice">
+                        {{mul this.priceDish this.quantityDish}}
+                    </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="text-align: center;">
+        <h4 id="totalPrice">Tổng số tiền: 0đ</h4>
+    </div>
+</div>
+
+
+<script>
+    let total = 0;
+    let total2 = 0
+    const checkWarehouse = document.getElementById('checkWarehouse')
+    const confirmPayForm = document.getElementById('confirmPayForm')
+    const themmonButton = document.getElementById('themmon')
+    const confirmPayButton = document.getElementById('confirmpaybutton')
+    const sumPriceList = document.getElementsByClassName('sumPrice')
+    let dishQuantityInputs = document.getElementsByClassName('dishQuantityInput')
+    let totalPrice = document.getElementById('totalPrice')
+    let confirmPay = document.getElementById('confirmpay')
+
+    for(let k = 0 ; k < dishQuantityInputs.length ; k++) {
+            dishQuantityInputs[k].addEventListener("change", () => {
+                dishBonus[k].quantity = dishQuantityInputs[k].value
+        })
+    }
+
+    for(let i = 0 ; i < sumPriceList.length ; i++) {
+        total += parseInt(sumPriceList[i].textContent)
+    }
+
+    
+    totalPrice.innerHTML = `Tổng số tiền: ${total} VNĐ`
+
+    confirmPay.innerHTML = `Xác nhận thanh toán hóa đơn với số tiền ${total} VNĐ ?`
+
+    themmonButton.addEventListener('click', () => {
+        for(let k = 0 ; k < dishQuantityInputs.length ; k++){
+            total2 += (dishBonus[k].price * dishQuantityInputs[k].value)
+        }
+        const input = `<input type="hidden" name="totalPrice" value="${total2}">`
+        checkWarehouse.innerHTML += input
+        for(let k = 0 ; k < dishBonus.length ; k++){
+            if(dishBonus[k].quantity > 0){
+                const input = `<input type="hidden" name="${dishBonus[k].id}" value="${dishBonus[k].quantity}">`
+                checkWarehouse.innerHTML += input
+            }
+        }
+        checkWarehouse.submit()
+    })
+
+    confirmPayButton.addEventListener('click', () => {
+        const input = `<input type="hidden" name="totalPrice" value="${total}">`
+        confirmPayForm.innerHTML += input
+        confirmPayForm.submit()
+    })
+
+</script>

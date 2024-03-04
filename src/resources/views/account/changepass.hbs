@@ -1,0 +1,27 @@
+{{>header}}
+
+<div class="container">
+    <table id="productTable" class="table">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên đăng nhập</th>
+                <th scope="col">Mật khẩu</th>
+                <th scope="col">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each accounts}}
+                    <tr>
+                    <td>{{sum @index 1}}</td>
+                    <td>{{this.username}}</td>
+                    <td>{{this.password}}</td>
+                    <td>
+                        <button class="btn btn-success" type="submit" onclick="location.href='/account/changepass/{{this._id}}'">Đổi mật khẩu</button>
+                        <button class="btn btn-danger" type="submit" onclick="location.href='/account/{{this._id}}/delele'" style="margin-left: 10px  ;">Xóa</button>
+                    </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+</div>

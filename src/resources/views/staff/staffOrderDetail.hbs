@@ -1,0 +1,214 @@
+<link rel="stylesheet" href="/css/order.css">
+
+{{> headerstaff}}
+
+<div class="container">
+    <h4  style="text-align: center;" class="">CHI TIẾT HÓA ĐƠN</h4>
+    <button data-toggle="modal" data-target="#exampleModalCenter" style="background-color: rgb(54, 247, 54); color: white; margin-top: -5px; margin-left: -15px" class="button-warehouse btn mb-3">THÊM MÓN</button>
+    <p style="text-align: center; color: red; margin-top: 10px;">{{{vipErrorMessage}}}</p>
+    <div class="ordername">Tên hóa đơn: {{orders.name}}</div>
+    <div class="row">
+        <table id="productTable" class="table">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên món</th>
+                <th scope="col">Giá món</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders.dishes}}
+                    <tr>
+                    <td>{{sum @index 1}}</td>
+                    <td>{{this.nameDish}}</td>
+                    <td>{{this.priceDish}} đ</td>
+                    <td>{{this.quantityDish}}</td>
+                    <td class="sumPrice">
+                        {{mul this.priceDish this.quantityDish}}
+                    </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="text-align: center;">
+        <h4 id="totalPrice">Tổng số tiền: 0đ</h4>
+    </div>
+
+    <button data-toggle="modal" data-target="#exampleModalCenter2" style="float:right; background-color: #e84f4f; color: white; margin-top: -15px; margin-left: -15px" class="button-warehouse btn mb-3">THANH TOÁN</button>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thông tin hóa đơn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="productTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên món</th>
+                        <th scope="col">GIá món</th>
+                        <th scope="col"></th>
+                        <th scope="col">Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <script>
+                            dishBonus = []
+                        </script>
+
+                        {{#each dish}}
+                            <tr>
+                            <td>{{sum @index 1}}</td>
+                            <td>{{this.name}}</td>
+                            <td>{{this.price}}đ</td>
+                            <td></td>
+                            <td>
+                                <input type="number" class="form-control dishQuantityInput" required id="nameOrder" min="0" step="1" name="name" placeholder="Tên hóa đơn" value="0">
+                            </td>
+                            </tr>
+
+                            <script>
+                                dishBonus.push({
+                                    id: '{{this._id}}',
+                                    name: '{{this.name}}',
+                                    price: '{{this.price}}',
+                                    quantity: 0,
+                                })
+                            </script>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="themmon" data-toggle="modal" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            </div>
+
+            <form id="checkWarehouse" hidden method="POST" action="/staff/stafforder/{{orders._id}}/checkWarehouse">
+                
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Chọn bàn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="productTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên bàn</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each tables}}
+                            <tr>
+                            <td>{{sum @index 1}}</td>
+                            <td>{{this.name}}</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="{{this.name}}" name="{{this._id}}">
+                                </div>
+                            </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Xong</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="font-size: 24px; color: red">Xác nhận thanh toán</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="confirmpay">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="confirmpaybutton" type="button" class="btn btn-primary">Thanh toán</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" id="confirmPayForm" hidden action="/staff/stafforder/{{orders._id}}/confirmPay" >
+    </form>
+</div>
+
+
+<script>
+    let total = 0;
+    let total2 = 0
+    const checkWarehouse = document.getElementById('checkWarehouse')
+    const confirmPayForm = document.getElementById('confirmPayForm')
+    const themmonButton = document.getElementById('themmon')
+    const confirmPayButton = document.getElementById('confirmpaybutton')
+    const sumPriceList = document.getElementsByClassName('sumPrice')
+    let dishQuantityInputs = document.getElementsByClassName('dishQuantityInput')
+    let totalPrice = document.getElementById('totalPrice')
+    let confirmPay = document.getElementById('confirmpay')
+
+    for(let k = 0 ; k < dishQuantityInputs.length ; k++) {
+            dishQuantityInputs[k].addEventListener("change", () => {
+                dishBonus[k].quantity = dishQuantityInputs[k].value
+        })
+    }
+
+    for(let i = 0 ; i < sumPriceList.length ; i++) {
+        total += parseInt(sumPriceList[i].textContent)
+    }
+
+    totalPrice.innerHTML = `Tổng số tiền: ${total} VNĐ`
+
+    confirmPay.innerHTML = `Xác nhận thanh toán hóa đơn với số tiền ${total} VNĐ ?`
+
+    themmonButton.addEventListener('click', () => {
+        for(let k = 0 ; k < dishQuantityInputs.length ; k++){
+            total2 += (dishBonus[k].price * dishQuantityInputs[k].value)
+        }
+        const input = `<input type="hidden" name="totalPrice" value="${total2}">`
+        checkWarehouse.innerHTML += input
+        for(let k = 0 ; k < dishBonus.length ; k++){
+            if(dishBonus[k].quantity > 0){
+                const input = `<input type="hidden" name="${dishBonus[k].id}" value="${dishBonus[k].quantity}">`
+                checkWarehouse.innerHTML += input
+            }
+        }
+        checkWarehouse.submit()
+    })
+
+    confirmPayButton.addEventListener('click', () => {
+        const input = `<input type="hidden" name="totalPrice" value="${total}">`
+        confirmPayForm.innerHTML += input
+        confirmPayForm.submit()
+    })
+
+</script>

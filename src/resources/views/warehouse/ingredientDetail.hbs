@@ -1,0 +1,23 @@
+{{> header}}
+
+<div class="container">
+    <h4 class="" style="text-align: center; margin-top: -35px;">SỬA NGUYÊN LIỆU</h4>
+    <form method="POST" action="/warehouse/{{ingredient._id}}">
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên nguyên liệu</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Tên mặt hàng" value="{{ingredient.name}}">
+        </div>
+        
+        <div class="mb-3">
+            <label for="price" class="form-label">Ngưỡng cảnh báo hết hàng</label>
+            <input type="number" class="form-control" id="price" name="warningnum" placeholder="Đơn giá" value="{{ingredient.warningnum}}"> 
+        </div>
+
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Đơn vị</label>
+            <input type="text" class="form-control" id="quantity" name="donvi" placeholder="Số lượng còn lại" value="{{ingredient.donvi}}">
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-5">Submit</button>
+    </form>
+</div>

@@ -1,0 +1,236 @@
+{{> header}}
+
+<div class="container">
+    <h4 class="" style="text-align: center; margin-top: -35px;">CHI TIẾT MÓN ĂN</h4>
+    <form id="suamonan" method="POST" action="/menu/{{dish._id}}">
+    </form>
+
+
+    <div class="mb-3">
+            <label for="name" class="form-label">Tên món</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{dish.name}}">
+        </div>
+        
+        <div class="mb-3">
+            <label for="price" class="form-label">Giá</label>
+            <input type="number" class="form-control" id="price" name="price" value="{{dish.price}}"> 
+        </div>
+
+    <div class="mb-3">
+            <label for="quantity" class="form-label">Nguyên liệu</label>
+        </div>
+    <button class="btn btn-success" style="font-weight: 100; width: 150px; border-radius: 4px; margin-left: 20px; margin-bottom: 10px " id="cartBtn" data-toggle="modal" data-target="#exampleModal">Chọn nguyên liệu</button>
+    
+    <table id="table" class="table">
+                    <thead class="thead-light">
+                        <tr>
+                        {{!-- <th scope="col">#</th> --}}
+                        <th scope="col">Tên nguyên liệu</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn vị</th>
+                        {{!-- <th scope="col">Thành tiền</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody id="myTable"> 
+                        <script>
+                            selectedIngredientList = []
+                            listCopy = []
+                            let num = 0
+                        </script>                       
+                        {{#each dish.ingredients}}
+                            <tr>
+                                <td>{{this.nameIn}}</td>
+                                <td><input type="number" class="ingredientQuantityInput" style="width: 100px" id="quantity" name="quantity" value="{{this.quantity}}"></td>
+                                <td>{{this.donviIn}}</td>
+                            </tr>
+                        
+                        <script>
+                            num += 1
+                            selectedIngredientList.push({
+                                id: '{{this.ingredientsId}}',
+                                name: '{{this.nameIn}}',
+                                donvi: '{{this.donviIn}}',
+                                quantity: '{{this.quantity}}',
+                            })
+
+                            listCopy.push({
+                                id: '{{this.ingredientsId}}',
+                                name: '{{this.nameIn}}',
+                                donvi: '{{this.donviIn}}',
+                                quantity: '{{this.quantity}}',
+                            })
+
+                        </script>
+
+                        {{/each}}
+                            
+                    </tbody>
+                </table>
+
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Giỏ hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="table" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        {{!-- <th scope="col">#</th> --}}
+                        <th scope="col">Tên nguyên liệu</th>
+                        <th scope="col">Đơn vị </th>
+                        <th scope="col">Chọn</th>
+                        {{!-- <th scope="col">Thành tiền</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <div class="listing-section">
+                            <script>
+                                ingredientList = []
+
+                            </script>
+
+                            {{#each warehouses}}
+                            <tr>
+                                <td>{{this.name}}</td>
+                                <td>{{this.donvi}}</td>
+                                <td><button class="btn btn-success addIngredient" type="submit">Chọn nguyên liệu</button></td>
+                            </tr>
+
+                            <script>
+                
+                                ingredientList.push({
+                                    id: '{{this._id}}',
+                                    name: '{{this.name}}',
+                                    donvi: '{{this.donvi}}',
+                                    quantity: 0,
+                                })
+
+                            </script>
+                            {{/each}}
+                        </div>
+                    </tbody>
+                </table>
+                
+                <div style="text-align: center;">
+                    <div class="row justify-content-center">
+                        {{!-- <label for="inputPassword" class="col-sm-2 col-form-label">Số điện thoại</label> --}}
+                        <div class="col-sm-3">
+                            
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" data-dismiss="modal" id="addIngredientButton" form="orderForm">Xác nhận</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-5" id="saveIngredientButton" data-target="#suamonan"> Submit</button>
+
+    <script>
+        const addIngredientButtons = document.getElementsByClassName("addIngredient")
+        const addIngredientButton = document.getElementById("addIngredientButton")
+        const name = document.getElementById('name')
+        const price = document.getElementById('price')
+        const formthemmon = document.getElementById("suamonan")
+        namenow = name.value
+        pricenow = price.value
+        table = document.getElementsByClassName("table")
+        tableData = document.getElementById("myTable")
+
+        for(let i = 0 ; i < addIngredientButtons.length ; i++){
+            let cnt = 0
+            addIngredientButtons[i].addEventListener("click", () => {
+                for(let j = 0 ; j < selectedIngredientList.length ; j++) {
+                    if((selectedIngredientList[j].id) === (ingredientList[i].id)) {  
+                        cnt = cnt + 1    
+                        break; 
+                    }
+                }
+                if(cnt === 0){
+                    selectedIngredientList.push(ingredientList[i])
+                }
+                console.log(selectedIngredientList)
+            }) 
+        }
+
+        name.addEventListener("change", () =>{
+            namenow = name.value
+            console.log(namenow)
+        })
+
+        price.addEventListener("change", () =>{
+            pricenow = price.value
+            console.log(pricenow)
+        })
+
+        let ingredientQuantityInputs = document.getElementsByClassName('ingredientQuantityInput')  
+            for(let k = 0 ; k < ingredientQuantityInputs.length ; k++) {
+                ingredientQuantityInputs[k].addEventListener("change", () => {
+                    let oldQuantity = selectedIngredientList[k].quantity
+                    selectedIngredientList[k].quantity = ingredientQuantityInputs[k].value 
+                    console.log(selectedIngredientList)
+            })
+        }
+
+        
+        addIngredientButton.addEventListener("click", () => {
+            console.log(selectedIngredientList)
+            for(let k = 0 ; k < selectedIngredientList.length ; k++) {
+                let cnt = 0
+                for(let j = 0 ; j < listCopy.length ; j++) {
+                    if(JSON.stringify(listCopy[j]) === JSON.stringify(selectedIngredientList[k])) {  
+                        cnt = cnt + 1    
+                        break; 
+                    }
+                }
+                if(cnt === 0){
+                    listCopy.push(selectedIngredientList[k])
+                    var row = `<tr>
+                        <td>${selectedIngredientList[k].name}</td>
+                        <td class="orderQuantityInputRow"><input class="ingredientQuantityInput" style="width: 100px" min="0" name="quantity" value="${selectedIngredientList[k].quantity}" type="number"></td>
+                        <td>${selectedIngredientList[k].donvi}</td>
+                    </tr>`
+                    tableData.innerHTML += row
+                }
+            }  
+            let ingredientQuantityInputs = document.getElementsByClassName('ingredientQuantityInput')  
+            for(let k = 0 ; k < ingredientQuantityInputs.length ; k++) {
+                ingredientQuantityInputs[k].addEventListener("change", () => {
+                    let oldQuantity = selectedIngredientList[k].quantity
+                    selectedIngredientList[k].quantity = ingredientQuantityInputs[k].value 
+                    console.log(selectedIngredientList)
+            })
+            }
+        })
+
+        saveIngredientButton.addEventListener("click", () => {
+            const input1 = `<input type="hidden" name="name" value="${namenow}">`
+            const input2 = `<input type="hidden" name="price" value="${pricenow}">`
+            formthemmon.innerHTML += input1
+            formthemmon.innerHTML += input2
+            for(let i = 0 ; i < selectedIngredientList.length ; i++) {
+                const input = `<input type="hidden" name="${selectedIngredientList[i].id}" value="${selectedIngredientList[i].quantity}">`
+                const input1 = `<input type="hidden" name="name + ${i}" value="${selectedIngredientList[i].name}">`
+                const input2 = `<input type="hidden" name="donvi + ${i}" value="${selectedIngredientList[i].donvi}">`
+                formthemmon.innerHTML += input
+                formthemmon.innerHTML += input1
+                formthemmon.innerHTML += input2
+            }
+            console.log(formthemmon)
+            formthemmon.submit()
+        })
+
+    </script>
+</div>

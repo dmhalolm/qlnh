@@ -1,0 +1,121 @@
+<link rel="stylesheet" href="/css/thongke.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+{{> header}}
+
+<div class="container-fluid" style="width: 80%">
+    <h2 class="my-4" style="color: red;">THỐNG KÊ THEO NGÀY</h2>
+    
+    
+    <form action="/thongke/thongkekho/getInfo" method="POST">
+
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3">
+                <input class="form-control py-4" id="myInput" required type="Date" name="selectedDay" style="float: left" >
+            </div>
+            <div class="col-4" >
+                <input  type="submit"  value="Thống kê" style="margin-bottom: 30px; width: 60%;">
+            </div>
+        </div>
+
+    </form>
+
+    <div style="padding-bottom: 20px; font-size: 22px">Tổng doanh thu: {{totalProfit}}  VND</div>
+    <div style="padding-bottom: 20px; font-size: 22px">Tổng chi phí nhập nguyên liệu: {{totalExpense}}  VND</div>
+    <div class="thongkediv" style="padding-bottom: 20px;">Thống kê hóa đơn</div>
+    <div class="row">
+        <table id="orderTable" class="table">
+            <thead class="thead-dark">
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên hóa đơn</th>
+                <th scope="col">Danh sách bàn</th>
+                <th scope="col">Tổng giá</th>
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each listOrder}}
+                    <tr>
+                    <td>{{sum @index 1}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.tableNames}}</td>
+                    <td>{{this.totalPrice}} đ</td>
+                    <td>
+                        <button class="btn btn-link" onclick="location.href='/order/{{this._id}}/thongke'">Chi tiết</button>
+                    </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="thongkediv" style="padding-bottom: 20px;">Thống kê nhập nguyên liệu</div>
+    <div class="row">
+        <table id="ingTable" class="table">
+            <thead class="thead-dark">
+                <tr>
+                <th scope="col">#</th>
+                
+                <th scope="col" >Phí nhập </th>
+                
+                
+                <th scope="col" colspan="3">Mô tả</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    let cl
+                </script>
+                {{#each listImport}}
+                    <tr>
+                    <td>{{sum @index 1}}</td>
+                    <td style="width: 100px">{{this.totalPrice}} đ</td>
+                    <td>
+                        {{this.describe}}
+                    </td>
+                    </tr>
+
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="thongkediv" style="padding-bottom: 20px;">Thống kê xuất nguyên liệu</div>
+    <div class="row">
+        <table id="ingTable" class="table">
+            <thead class="thead-dark">
+                <tr>
+                <th scope="col">#</th>
+                        
+                
+                <th scope="col" colspan="3">Mô tả</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    let cl
+                </script>
+                {{#each listExport}}
+                    <tr>
+                    <td>{{sum @index 1}}</td>
+                    <td>
+                        {{this.describe}}
+                    </td>
+                    </tr>
+                    <script>
+                        cl = 'mota' + {{sum @index 1}}
+                        document.getElementsByClassName(cl).innerHTML = `123`
+                    </script>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+

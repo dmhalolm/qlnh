@@ -1,0 +1,87 @@
+<link rel="stylesheet" href="/css/dropdown.css">
+<div class="header sticky-top" style="background-color: white;">
+    <nav class="navbar navbar-light navbar-expand-lg">
+        <div class="container">
+            <a href="#">
+                <img src="/img/logo.png" alt="logo" class="logo" onclick="location.href='/staff/stafftable'">
+            </a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/staff/stafftable">Danh sách bàn</a>
+                        <hr class="item-hover hide">
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/staff/staffwarehouse">Kho</a>
+                        <hr class="item-hover hide">
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/staff/stafforder">Đơn hàng</a>
+                        <hr class="item-hover hide">
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/">Đăng xuất</a>
+                        <hr class="item-hover hide">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="dropdown-divider my-0 pb-5"></div>
+
+<script>
+    const itemHover = document.querySelectorAll(".item-hover");
+    const itemHoverWhite = document.querySelectorAll(".item-hover-white");
+    const navItem = document.querySelectorAll(".nav-item");
+
+    navItem[0].addEventListener("mouseover", function() {
+        itemHover[0].classList.remove("hide");
+        itemHoverWhite[0].classList.add("hide");
+    });
+    navItem[0].addEventListener("mouseout", function() {
+        itemHover[0].classList.add("hide");
+        itemHoverWhite[0].classList.remove("hide");
+    });
+
+    navItem[1].addEventListener("mouseover", function() {
+        itemHover[1].classList.remove("hide");
+    });
+    navItem[1].addEventListener("mouseout", function() {
+        itemHover[1].classList.add("hide");
+    });
+
+    navItem[2].addEventListener("mouseover", function() {
+        itemHover[2].classList.remove("hide");
+    });
+    navItem[2].addEventListener("mouseout", function() {
+        itemHover[2].classList.add("hide");
+    });
+
+    navItem[3].addEventListener("mouseover", function() {
+        itemHover[3].classList.remove("hide");
+    });
+    navItem[3].addEventListener("mouseout", function() {
+        itemHover[3].classList.add("hide");
+    });
+
+    navItem[4].addEventListener("mouseover", function() {
+        itemHover[4].classList.remove("hide");
+    });
+    navItem[4].addEventListener("mouseout", function() {
+        itemHover[4].classList.add("hide");
+    });
+    navItem[5].addEventListener("mouseout", function() {
+        itemHover[5].classList.add("hide");
+    });
+    navItem[5].addEventListener("mouseover", function() {
+        itemHover[5].classList.remove("hide");
+    });
+    navItem[6].addEventListener("mouseout", function() {
+        itemHover[6].classList.add("hide");
+    });
+    navItem[6].addEventListener("mouseover", function() {
+        itemHover[6].classList.remove("hide");
+    });
+</script>

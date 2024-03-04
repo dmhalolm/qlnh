@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/css/regis.css">
+{{>header}}
+
+
+<div class="formregis">
+      <h1>Đổi mật khẩu</h1>
+      <form method="POST" action="/account/changepass/{{account._id}}">
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên đăng nhập </label>
+            <input type="text" class="form-control" id="username" disabled name="username" placeholder="Tên đăng nhập" value="{{account.username}}">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Mật khẩu mới</label>
+            <input type="password" class="form-control" required id="password" name="password" placeholder="Mật khẩu">
+        </div>
+
+        <p style="text-align: center; color: red; margin-top: 10px;">{{{errors}}}</p>
+
+        <input id="submitbutton" type="submit" value="Đổi mật khẩu" />
+    </form>
+</div>

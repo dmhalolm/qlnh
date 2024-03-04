@@ -1,0 +1,125 @@
+<link rel="stylesheet" href="/css/warehouse.css">
+
+{{> headerstaff}}
+
+<div class="container">
+    <h4  style="text-align: center;" class="">DANH SÁCH NGUYÊN LIỆU</h4>
+    <div class="row">
+        <table id="productTable" class="table">
+            <thead class="thead-dark">
+                <tr>
+                {{!-- <th scope="col">#</th> --}}
+                <th scope="col">Tên nguyên liệu</th>
+                <th scope="col">Tồn kho</th>
+                <th scope="col">Đơn vị</th>
+                <th scope="col">Giá nhập</th>
+                <th scope="col">Chú thích</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    let ans
+                    let num
+                    let warn
+                    let numc
+                </script>
+                {{#each warehouses}}
+                    <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.number}}</td>
+                    <td>{{this.donvi}}</td>
+                    <td>{{this.tbgia}}đ / {{this.donvi}}</td>
+                    <td>
+                        <div style="color: red;" id="{{this.name}}">
+                              
+                        </div>
+                    </td>
+                    <script>
+                        if({{this.number}} === 0) {ans=0}
+                        else {ans=1}
+                        
+                        if(ans===0){ 
+                            document.getElementById('{{this._id}}').setAttribute('data-target', '#exampleModalCenter')
+                        }
+                        else if(ans===1)
+                        {document.getElementById('{{this._id}}').setAttribute('data-target', '#exampleModalCenter1')
+                        }
+
+                        
+                    </script>
+
+                    <script>
+                    
+                            num = {{this.number}} 
+                            warn = {{this.warningnum}} 
+                            numc = warn - num
+                            if(numc > 0){
+                                document.getElementById('{{this.name}}').innerHTML = "Sắp hết hàng"
+                            }
+                    </script>
+
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Xóa nguyên liệu?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắc muốn xóa nguyên liệu này?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="confirmDeleteButton" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thất bại</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Không thể xóa nguyên liệu còn tồn kho!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="POST" name="formxoanguyenlieu"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        let ingredientId
+        let formxoanguyenlieu = document.forms['formxoanguyenlieu']
+        let confirmDeleteButton = document.getElementById('confirmDeleteButton')
+
+        $('#exampleModalCenter').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        ingredientId = button.data('id')
+    
+        confirmDeleteButton.onclick = () => {
+            formxoanguyenlieu.action = '/warehouse/' + ingredientId + '/delete'
+            formxoanguyenlieu.submit()
+        }
+    })
+})
+</script>

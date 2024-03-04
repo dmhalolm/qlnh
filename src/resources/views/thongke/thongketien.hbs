@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="/css/thongke.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+{{> header}}
+
+<div class="container-fluid" style="width: 80%">
+    <h2 class="my-4" style="color: red;">THỐNG KÊ THEO THÁNG</h2>
+    
+    
+    <form action="/thongke/thongkethang/getInfo" method="POST">
+
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3">
+                <input class="form-control py-4" id="myInput" required type="Month" name="selectedMonth" style="float: left" >
+            </div>
+            <div class="col-4" >
+                <input  type="submit"  value="Thống kê" style="margin-bottom: 30px; width: 60%;">
+            </div>
+        </div>
+
+    </form>
+
+    <div style="padding-bottom: 20px; font-size: 22px">Tổng doanh thu: {{totalProfit}}  VND</div>
+    <div style="padding-bottom: 20px; font-size: 22px">Lãi: {{interest}}  VND</div>
+    <div>
+        <main style="width : 100%">
+            <h5>Doanh Thu Trong Tháng</h5>
+            <div id="bar-chart"></div>
+        </main>
+    </div>
+
+
+    
+</div>
+
+<script>
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawCharts);
+        function drawCharts() {
+        var barData = google.visualization.arrayToDataTable([
+                                    ['0', 'Doanh Thu'],
+                                    ['1', {{one}}],
+                                    ['2',  {{two}}],
+                                    ['3',  {{three}}],
+                                    ['4',  {{four}}],
+                                    ['5',  {{five}}],
+                                    ['6',  {{six}}],
+                                    ['7',  {{seven}}],
+                                    ['8',  {{eight}}],
+                                    ['9',   {{nine}}],
+                                    ['10',  {{ten}}],
+                                    ['11', {{one1}}],
+                                    ['12',  {{two1}}],
+                                    ['13',  {{three1}}],
+                                    ['14',  {{four1}}],
+                                    ['15',  {{five1}}],
+                                    ['16',  {{six1}}],
+                                    ['17',  {{seven1}}],
+                                    ['18',  {{eight1}}],
+                                    ['19',   {{nine1}}],
+                                    ['20',  {{ten1}}],
+                                    ['21', {{one2}}],
+                                    ['22',  {{two2}}],
+                                    ['23',  {{three2}}],
+                                    ['24',  {{four2}}],
+                                    ['25',  {{five2}}],
+                                    ['26',  {{six2}}],
+                                    ['27',  {{seven2}}],
+                                    ['28',  {{eight2}}],
+                                    ['29',   {{nine2}}],
+                                    ['30',  {{ten2}}],
+                                    ['31',  {{one3}}],
+                                ]);
+        // set bar chart options
+        var barOptions = {
+            focusTarget: 'category',
+            backgroundColor: 'transparent',
+            colors: ['cornflowerblue', 'tomato'],
+            fontName: 'Open Sans',
+            chartArea: {
+            left: 50,
+            top: 10,
+            width: '100%',
+            height: '70%'
+            },
+            bar: {
+            groupWidth: '80%'
+            },
+            hAxis: {
+            textStyle: {
+                fontSize: 11
+            }
+            },
+            vAxis: {
+            minValue: 0,
+            maxValue: 1500,
+            baselineColor: '#DDD',
+            gridlines: {
+                color: '#DDD',
+                count: 4
+            },
+            textStyle: {
+                fontSize: 11
+            }
+            },
+            legend: {
+            position: 'bottom',
+            textStyle: {
+                fontSize: 12
+            }
+            },
+            animation: {
+            duration: 1200,
+            easing: 'out',
+            startup: true
+            }
+        };
+        // draw bar chart twice so it animates
+        var barChart = new google.visualization.ColumnChart(document.getElementById('bar-chart'));
+        //barChart.draw(barZeroData, barOptions);
+        barChart.draw(barData, barOptions);
+    }
+    </script>
+

@@ -1,0 +1,236 @@
+<link rel="stylesheet" href="/css/menu.css">
+{{> header}}
+
+<div class="container">
+    <h4 class="" style="text-align: center; margin-top: -35px;">THÊM MÓN MỚI</h4>
+    <form hidden method="POST" id="themmonan" action="/menu/luumon" > 
+
+    </form>
+
+
+
+    <div class="mb-3">
+            <label for="name" class="form-label">Tên món</label>
+            <input type="text" class="form-control" id="name" name="name" required placeholder="Tên món" value="món mới">
+        </div>
+        
+        <div class="mb-3">
+            <label for="number" class="form-label">Giá</label>
+            <input type="number" class="form-control" id="price" name="price" required placeholder="Giá" value="0">
+        </div> 
+    <button class="giohangbutton" style="font-weight: 100; width: 150px; border-radius: 4px; margin-left: 20px" id="cartBtn" data-toggle="modal" data-target="#exampleModal"><i class="ti-shopping-cart"></i> Chọn nguyên liệu</button>
+
+    <table id="table" class="table">
+                    <thead class="thead-light">
+                        <tr>
+                        <th scope="col">Tên nguyên liệu</th>
+                        <th scope="col">Đơn vị </th>
+                        <th scope="col">Đơn giá </th>
+                        <th scope="col">Số lượng </th>                        
+                        {{!-- <th scope="col">Thành tiền</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+                    </tbody>
+                </table>
+
+    <div style="text-align: center;">
+        <h4 id="totalPrice"></h4>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Danh sách nguyên liệu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="table" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        {{!-- <th scope="col">#</th> --}}
+                        <th scope="col">Tên nguyên liệu</th>
+                        <th scope="col">Đơn vị </th>
+                        <th scope="col">Chọn</th>
+                        {{!-- <th scope="col">Thành tiền</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <div class="listing-section">
+                            <script>
+                                ingredientList = []
+
+                            </script>
+
+                            {{#each warehouses}}
+                            <tr>
+                                <td>{{this.name}}</td>
+                                <td>{{this.donvi}}</td>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="{{this.name}}" name="{{this._id}}">
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <script>
+                
+                                ingredientList.push({
+                                    id: '{{this._id}}',
+                                    name: '{{this.name}}',
+                                    donvi: '{{this.donvi}}',
+                                    tbgia: '{{this.tbgia}}',
+                                    quantity: 0,
+                                })
+
+                            </script>
+                            {{/each}}
+                        </div>
+                    </tbody>
+                </table>
+                
+                <div style="text-align: center;">
+                    <div class="row justify-content-center">
+                        {{!-- <label for="inputPassword" class="col-sm-2 col-form-label">Số điện thoại</label> --}}
+                        <div class="col-sm-3">
+                            
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" data-dismiss="modal" id="addIngredientButton" form="orderForm">Xác nhận</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cảnh báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Giá hoặc số lượng không được nhỏ hơn 0
+            </div>
+            <div class="modal-footer">
+                <button id="selectIngredientButton" type="button" class="btn btn-blue" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <button data-toggle="modal" data-target="#exampleModalCenter1" id="buttonhidden" hidden class="buttonhidden">abc</button>
+
+    <button type="submit" class="btn btn-primary mb-5" id="saveIngredientButton" data-target="#themmonan"> Submit</button>
+    <script>
+        selectedIngredientList = []
+        let quantitylist = []
+        let total
+        const addIngredientButtons = document.getElementsByClassName("addIngredient")
+        const totalPrice = document.getElementById('totalPrice')
+        const saveIngredientButton = document.getElementById("saveIngredientButton") 
+        const formthemmon = document.getElementById("themmonan")
+        const addIngredientButton = document.getElementById("addIngredientButton")
+        let checkTable = document.getElementsByClassName('form-check-input')
+        const buttonhidden = document.getElementById('buttonhidden')
+        table = document.getElementsByClassName("table")
+        tableData = document.getElementById("myTable")
+
+        addIngredientButton.addEventListener("click", () => {
+            tableData.innerHTML = ''
+            selectedIngredientList = []
+            for(let k = 0 ; k < checkTable.length ; k++){
+                if(checkTable[k].checked){
+                    var inrow = `<tr>
+                        <td>${ingredientList[k].name}</td>
+                        <td>${ingredientList[k].donvi}</td>
+                        <td class="trungbinhgia">${ingredientList[k].tbgia}</td>
+                        <td class="orderQuantityInputRow"><input class="quantityInput" style="width: 100px" min="0" name="${ingredientList[k].id}" value="0" type="number"></td>
+                    </tr>`
+                    tableData.innerHTML += inrow
+                    selectedIngredientList.push(ingredientList[k])
+
+                }
+            }
+
+            let ingredientQuantityInputs = document.getElementsByClassName('quantityInput')
+            let trungbinhgias = document.getElementsByClassName('trungbinhgia')
+            for(let k = 0 ; k < ingredientQuantityInputs.length ; k++){
+                quantitylist[k] = ingredientQuantityInputs[k].value
+                ingredientQuantityInputs[k].addEventListener("change", () => {
+                    if(ingredientQuantityInputs[k].value < 0) {
+                        buttonhidden.click();
+                        ingredientQuantityInputs[k].value = quantitylist[k]
+                    }
+                    else{
+                        total = 0
+                        quantitylist[k] = ingredientQuantityInputs[k].value
+                        for(let i = 0 ; i < trungbinhgias.length ; i++) {
+                            total += Number(trungbinhgias[i].innerHTML) * ingredientQuantityInputs[i].value
+                        }
+                        totalPrice.innerHTML = `Tổng giá nguyên liệu: ${total} VNĐ`
+                        console.log(total)
+                    }
+                })
+            }
+        })
+
+        for(let i = 0 ; i < addIngredientButtons.length ; i++){
+            let cnt = 0
+            addIngredientButtons[i].addEventListener("click", () => {
+                for(let j = 0 ; j < selectedIngredientList.length ; j++) {
+                    if(JSON.stringify(selectedIngredientList[j]) === JSON.stringify(ingredientList[i])) {  
+                        cnt = cnt + 1    
+                        break; 
+                    }
+                }
+                if(cnt === 0){
+                    selectedIngredientList.push(ingredientList[i])
+                }
+            }) 
+        }
+
+        
+        const name = document.getElementById('name')
+        const price = document.getElementById('price')
+        namenow = name.value
+        pricenow = price.value
+
+        name.addEventListener("change", () =>{
+            namenow = name.value
+        })
+
+        price.addEventListener("change", () =>{
+            pricenow = price.value
+        })
+
+                
+        saveIngredientButton.addEventListener("click", () => {
+            const input1 = `<input type="hidden" name="name" value="${namenow}">`
+            const input2 = `<input type="hidden" name="price" value="${pricenow}">`
+            formthemmon.innerHTML += input1
+            formthemmon.innerHTML += input2
+            for(let i = 0 ; i < selectedIngredientList.length ; i++) {
+                const input = `<input type="hidden" name="${selectedIngredientList[i].id}" value="${quantitylist[i]}">`
+                const input1 = `<input type="hidden" name="name + ${i}" value="${selectedIngredientList[i].name}">`
+                const input2 = `<input type="hidden" name="donvi + ${i}" value="${selectedIngredientList[i].donvi}">`
+                formthemmon.innerHTML += input
+                formthemmon.innerHTML += input1
+                formthemmon.innerHTML += input2
+            }
+            console.log(formthemmon)
+            formthemmon.submit()
+        })
+
+    </script>
+</div>

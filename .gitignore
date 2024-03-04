@@ -1,0 +1,25 @@
+# Dependency directories
+node_modules/
+
+# OS or Editor files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Logs
+logs
+*.log
+
+# Environment variables
+.env
+
+# Production build
+/build
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# Optionally, you can ignore your IDE or editor files
+# For example, if you're using VSCode:
+.vscode/

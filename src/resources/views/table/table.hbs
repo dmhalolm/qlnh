@@ -1,0 +1,224 @@
+<link rel="stylesheet" href="/css/table.css">
+
+{{> header}}
+
+<div class="container">
+    <h4  style="text-align: center;" class="">DANH SÁCH BÀN</h4>
+    <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Chọn bàn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="productTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên bàn</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <script>
+                            let tableLists = []
+                        </script>
+                        {{#each tablesno}}
+                            <tr>
+                            <td>{{sum @index 1}}</td>
+                            <td>{{this.name}}</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="{{this.name}}" name="{{this._id}}">
+                                </div>
+                            </td>
+                            </tr>
+                            <script>
+                
+                                tableLists.push({
+                                    id: '{{this._id}}',
+                                    name: '{{this.name}}',
+                                })
+
+                            </script>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter4">Xóa</button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="trangthai">
+        <div class="trangthaiban">Trạng thái:
+            <div class="trangthaitrong"></div>    
+            <div>Còn trống</div>
+            <div class="trangthaicokhach"></div>
+            <div>Có khách</div>
+        </div>
+        <div class="buttons">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter3">Xóa bàn</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Thêm bàn</button>
+        </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Thông tin bàn</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="themban" action="/table/themban">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên bàn</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Tên bàn">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submitTableButton" data-target="#themban">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Tạo hóa đơn mới?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn tạo hóa đơn cho bàn?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button id="confirmDeleteButton" type="button" class="btn btn-primary">Tạo</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Xác nhận xóa?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn xóa các bàn đã chọn?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button id="confirmDeleteButtons" type="button" class="btn btn-primary">Xóa</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<ul class="tableList"></div>
+    
+        {{#each tables}} 
+            <li class="tableicons">
+                <div class="chairs">
+                    <div class="chair"></div>
+                    <div class="chair"></div>
+                </div>
+                <button class="tableIcon" id="{{this._id}}" data-name="{{this.name}}" onclick="location.href='/order/{{this.orderId}}'" data-toggle="modal" data-id ="{{this._id}}"></button>
+                <div class="chairs">
+                    <div class="chair"></div>
+                    <div class="chair"></div>
+                </div>
+                <div class="tableName">{{this.name}}</div>
+            </li>
+            <script>
+                if({{this.status}}){
+                    document.getElementById('{{this._id}}').style.backgroundColor = "green"
+                    document.getElementById('{{this._id}}').setAttribute('data-target', '#exampleModalCenter2')
+                    document.getElementById('{{this._id}}').onclick = ""
+                }
+                else{
+                    document.getElementById('{{this._id}}').style.backgroundColor = "red"
+                    
+                }
+                
+            </script>
+        {{/each}}
+</ul>
+
+<form method="POST" name="formxoaban"></form>
+<form method="POST" action="/table/delete" id="listbanxoa"></form>
+
+<script>
+    const submitTableButton = document.getElementById('submitTableButton')
+    const formthemban = document.getElementById('themban')
+    const formxoabans = document.getElementById('listbanxoa')
+    let confirmDeleteButtons = document.getElementById('confirmDeleteButtons')
+    let deletelist = []
+    let checkTable = document.getElementsByClassName('form-check-input')
+    for(let k = 0 ; k < checkTable.length ; k++) {
+        checkTable[k].addEventListener("change", () => {
+            deletelist = []
+            for(let i = 0 ; i < checkTable.length ; i++){
+                if(checkTable[i].checked) {
+                    deletelist.push(tableLists[i].id)
+                }
+            }
+            console.log(deletelist)
+    })
+    }
+
+    confirmDeleteButtons.onclick = () => {
+        
+            for(let i = 0 ; i < checkTable.length ; i++){
+                if(checkTable[i].checked) {
+                    const input = `<input type="hidden" name="${tableLists[i].name}" value="${tableLists[i].id}">`
+                    formxoabans.innerHTML += input
+                }
+            }
+            formxoabans.submit()
+    }
+
+    submitTableButton.addEventListener('click', () => {
+        formthemban.submit()
+    })
+
+    document.addEventListener('DOMContentLoaded', function(){
+        let ingredientId
+        let formxoanguyenlieu = document.forms['formxoaban']
+        let confirmDeleteButton = document.getElementById('confirmDeleteButton')
+
+        $('#exampleModalCenter2').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        ingredientId = button.data('id')
+        nametable = button.data('name')
+    
+        confirmDeleteButton.onclick = () => {
+            formxoanguyenlieu.innerHTML = ""
+            const input = `<input type="hidden" name="name" value="${nametable}">`
+            formxoanguyenlieu.innerHTML += input
+            formxoanguyenlieu.action = '/order/create/' + ingredientId 
+            formxoanguyenlieu.submit()
+        }
+    })
+    })
+</script>
+

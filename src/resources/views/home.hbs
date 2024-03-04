@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/css/login.css">
+
+<div class="logo">
+            <a href="#">
+                <img src="/img/logo.png" alt="logo" class="logo" >
+            </a>
+</div>
+
+<div class="container">
+      <h1>Đăng nhập</h1>
+      <form method="POST" action="/home">
+        <div class="form-control">
+          <input type="text" id="username" placeholder="Tên đăng nhập" name="username" required/>
+          <span></span>
+          <small></small>
+        </div>
+        <div class="form-control">
+          <input type="password" id="password" placeholder="Mật khẩu" name="password" required/>
+          <span class="thongbao"></span>
+          <small></small>
+        </div>
+        <p style="text-align: center; color: red; margin-top: 10px;">{{{errors}}}</p>
+        <input type="submit" value="Đăng nhập" />
+
+      </form>
+</div>

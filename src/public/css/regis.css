@@ -1,0 +1,10 @@
+.formregis{
+    width: 400px;
+    margin: 10px 50px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+h1{
+    margin-bottom: 28px;
+}

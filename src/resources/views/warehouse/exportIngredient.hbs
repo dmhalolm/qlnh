@@ -1,0 +1,200 @@
+{{> header}}
+
+<div class="container">
+    <h4  style="text-align: center;" class="">XUẤT NGUYÊN LIỆU</h4>
+    <button data-toggle="modal" data-target="#exampleModalCenter" style="margin-top: 20px; background-color: rgb(57, 245, 57); color: white;  margin-left: -15px" class="button-warehouse btn mb-3">CHỌN NGUYÊN LIỆU </button>
+    <table id="table" class="table">
+        <thead id="tableHead" class="thead-dark">
+
+        </thead>
+
+        <tbody id="tableBody">
+
+        </tbody>
+    </table>
+    
+    <div style="text-align: center;">
+        <h4 id="totalPrice"></h4>
+    </div>
+
+    <button id="confirmexportbutton" style="float:right; margin-top: 20px; background-color: #C43030; color: white;  margin-left: -15px" class="button-warehouse btn mb-3">XÁC NHẬN</button>    
+
+    <form method="POST" id="confirmImport" hidden action="/warehouse/exportIngredient" >
+    </form>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Chọn bàn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="productTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên nguyên liệu</th>
+                        <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <script>
+                            let ingredientList = []
+                        </script>
+
+                        {{#each warehouses}}
+                            <tr>
+                            <td>{{sum @index 1}}</td>
+                            <td>{{this.name}}</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="{{this.name}}" name="{{this._id}}">
+                                </div>
+                            </td>
+                            </tr>
+
+                            <script>
+                
+                                ingredientList.push({
+                                    id: '{{this._id}}',
+                                    name: '{{this.name}}',
+                                    donvi: '{{this.donvi}}',
+                                    number: '{{this.number}}',
+                                    tbgia: '{{this.tbgia}}',
+                                })
+
+                            </script>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="selectIngredientButton" type="button" class="btn btn-blue" data-dismiss="modal">Xác nhận</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cảnh báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Số lượng xuất kho không được phép lớn hơn tồn kho!
+            </div>
+            <div class="modal-footer">
+                <button id="selectIngredientButton" type="button" class="btn btn-blue" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <button data-toggle="modal" data-target="#exampleModalCenter1" id="buttonhidden" hidden class="buttonhidden">abc</button>
+</div>
+
+<script>
+    
+    let total 
+    let checkCount = 0
+    let price = 0
+    let pricelist = []
+    let quantitylist = []
+    let infor = []
+    let checkTable = document.getElementsByClassName('form-check-input')
+    const selectIngredientButton = document.getElementById('selectIngredientButton')
+    const tableHead = document.getElementById('tableHead')
+    const tableBody = document.getElementById('tableBody')
+    const buttonhidden = document.getElementById('buttonhidden')
+    const totalPrice = document.getElementById('totalPrice')
+    const formConfirmImport = document.getElementById('confirmImport')
+    const confirmExportButton = document.getElementById('confirmexportbutton')
+
+    for(let k = 0 ; k < checkTable.length ; k++) {
+        checkTable[k].addEventListener("change", () => {
+            checkCount = 0
+            for(let i = 0 ; i < checkTable.length ; i++){
+                if(checkTable[i].checked) {
+                    checkCount += 1
+                }
+            }
+            console.log(checkCount)
+    })
+    }
+
+    selectIngredientButton.addEventListener('click', () => {
+        if(checkCount > 0) {
+            tableHead.innerHTML = ''
+            var row = `<tr>
+                <th scope="col">Tên nguyên liệu</th>
+                <th scope="col">Đơn vị</th>
+                <th scope="col">Tồn kho</th>
+                <th scope="col">Số lượng xuất</th>
+            </tr>`
+            tableHead.innerHTML += row
+
+            tableBody.innerHTML = ''
+
+            for(let k = 0 ; k < checkTable.length ; k++){
+                if(checkTable[k].checked){
+                    var inrow = `<tr>
+                        <td>${ingredientList[k].name}</td>
+                        <td>${ingredientList[k].donvi}</td>
+                        <td class="orderQuantityInputRow1"><input class="ingredientQuantity" disabled style="width: 100px" min="0" value="${ingredientList[k].number}" type="number"></td>
+                        <td class="orderQuantityInputRow1"><input class="ingredientQuantityInput" style="width: 100px" min="0" name="${ingredientList[k].name}" type="number"></td>
+                        <input class="donvivaid" style="width: 100px" min="0" hidden name="${ingredientList[k].id}" value="${ingredientList[k].donvi}" type="text">
+                        <input class="gia" style="width: 100px" min="0" hidden name="${ingredientList[k].id}" value="${ingredientList[k].tbgia}" type="text">
+                    </tr>`
+                    tableBody.innerHTML += inrow
+                }
+            }
+
+            let ingredientQuantityInputs = document.getElementsByClassName('ingredientQuantityInput')
+            let ingredientQuantitys = document.getElementsByClassName('ingredientQuantity')
+
+            for(let k = 0 ; k < ingredientQuantityInputs.length ; k++){
+                quantitylist[k] = ingredientQuantityInputs[k].value
+                ingredientQuantityInputs[k].addEventListener("change", () => {
+                    console.log(ingredientQuantityInputs[k].value > ingredientQuantitys[k].value)
+                    if(ingredientQuantityInputs[k].value > ingredientQuantitys[k].value) {
+                        buttonhidden.click();
+                        ingredientQuantityInputs[k].value = quantitylist[k]
+                    }
+                    else{
+                        quantitylist[k] = ingredientQuantityInputs[k].value
+                    }
+                })
+            }
+            
+        }
+    })
+
+    confirmExportButton.addEventListener('click', () => {
+        let ingredientQuantityInputs = document.getElementsByClassName('ingredientQuantityInput')
+        let donvivaids = document.getElementsByClassName('donvivaid')
+        let gias = document.getElementsByClassName('gia')
+
+        for(let k = 0 ; k < ingredientQuantityInputs.length ; k++){
+                price += Number(ingredientQuantityInputs[k].value) * Number(gias[k].value)
+                if(ingredientQuantityInputs[k].value > 0){
+                    const input = `<input type="hidden" name="${donvivaids[k].name}" value="${ingredientQuantityInputs[k].name}">`
+                    const input1 = `<input type="hidden" name="donvi + ${k}" value="${donvivaids[k].value}">`
+                    const input3 = `<input type="hidden" name="quantity + ${k}" value="${ingredientQuantityInputs[k].value}">`
+                    formConfirmImport.innerHTML += input
+                    formConfirmImport.innerHTML += input1
+                    formConfirmImport.innerHTML += input3   
+                }
+        }
+        const input4 = `<input type="hidden" name="totalPrice" value="${price}">`
+        formConfirmImport.innerHTML += input4
+        formConfirmImport.submit()
+
+    })
+</script>
+

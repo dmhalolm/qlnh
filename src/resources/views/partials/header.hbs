@@ -1,0 +1,118 @@
+<link rel="stylesheet" href="/css/dropdown.css">
+<div class="header sticky-top" style="background-color: white;">
+    <nav class="navbar navbar-light navbar-expand-lg">
+        <div class="container">
+            <a href="#">
+                <img src="/img/logo.png" alt="logo" class="logo" onclick="location.href='/table'">
+            </a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/table">Danh sách bàn</a>
+                        <hr class="item-hover hide">
+                        {{!-- <hr class="item-hover-white"> --}}
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/warehouse">Quản lí kho</a>
+                        <hr class="item-hover hide">
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/menu">Thực đơn</a>
+                        <hr class="item-hover hide">
+                    </li>
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link mt-3 mb-3" href="#">Thống kê</a>
+                        <hr class="item-hover hide">
+                        <div style="min-width: 150px; right: -35px;" class="dropdown-content">
+                            <a class="nav-link mt-3" href="/thongke/thongkekho">Thống kê theo ngày</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link mb-2" href="/thongke/thongketien">Thống kê theo tháng</a>
+                        </div>
+                        <div style="border-top:50px;"></div>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link mt-3 mb-3" href="/order">Đơn hàng</a>
+                        <hr class="item-hover hide">
+                    </li>
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link mt-3 mb-3" href="#">Tài khoản</a>
+                        <hr class="item-hover hide">
+                        <div style="min-width: 150px; right: -35px;" class="dropdown-content">
+                            <a class="nav-link mt-3" href="/account">Tạo tài khoản</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link mb-2" href="/account/changepass">Quản lý tài khoản</a>
+                        </div>
+                        <div style="border-top:50px;"></div>
+                    </li>
+                    <li class="nav-item px-2 dropdown">
+                        <a class="nav-link mt-3 mb-3" href="#">Admin</a>
+                        <hr class="item-hover hide">
+                        <div style="min-width: 150px; right: -35px;" class="dropdown-content">
+                            <a class="nav-link mt-3" href="/account/changeadminpass" style="text-align: center">Đổi mật khẩu</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="nav-link mb-2" href="/" style="text-align: center">Đăng xuất</a>
+                        </div>
+                        <div style="border-top:50px;"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="dropdown-divider my-0 pb-5"></div>
+
+<script>
+    const itemHover = document.querySelectorAll(".item-hover");
+    const itemHoverWhite = document.querySelectorAll(".item-hover-white");
+    const navItem = document.querySelectorAll(".nav-item");
+
+    navItem[0].addEventListener("mouseover", function() {
+        itemHover[0].classList.remove("hide");
+        itemHoverWhite[0].classList.add("hide");
+    });
+    navItem[0].addEventListener("mouseout", function() {
+        itemHover[0].classList.add("hide");
+        itemHoverWhite[0].classList.remove("hide");
+    });
+
+    navItem[1].addEventListener("mouseover", function() {
+        itemHover[1].classList.remove("hide");
+    });
+    navItem[1].addEventListener("mouseout", function() {
+        itemHover[1].classList.add("hide");
+    });
+
+    navItem[2].addEventListener("mouseover", function() {
+        itemHover[2].classList.remove("hide");
+    });
+    navItem[2].addEventListener("mouseout", function() {
+        itemHover[2].classList.add("hide");
+    });
+
+    navItem[3].addEventListener("mouseover", function() {
+        itemHover[3].classList.remove("hide");
+    });
+    navItem[3].addEventListener("mouseout", function() {
+        itemHover[3].classList.add("hide");
+    });
+
+    navItem[4].addEventListener("mouseover", function() {
+        itemHover[4].classList.remove("hide");
+    });
+    navItem[4].addEventListener("mouseout", function() {
+        itemHover[4].classList.add("hide");
+    });
+    navItem[5].addEventListener("mouseout", function() {
+        itemHover[5].classList.add("hide");
+    });
+    navItem[5].addEventListener("mouseover", function() {
+        itemHover[5].classList.remove("hide");
+    });
+    navItem[6].addEventListener("mouseout", function() {
+        itemHover[6].classList.add("hide");
+    });
+    navItem[6].addEventListener("mouseover", function() {
+        itemHover[6].classList.remove("hide");
+    });
+</script>

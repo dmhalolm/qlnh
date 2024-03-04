@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="/css/table.css">
+
+{{> headerstaff}}
+
+<div class="container">
+    <h4  style="text-align: center;" class="">DANH SÁCH BÀN</h4>
+</div>
+<div class="trangthai">
+        <div class="trangthaiban">Trạng thái:
+            <div class="trangthaitrong"></div>    
+            <div>Còn trống</div>
+            <div class="trangthaicokhach"></div>
+            <div>Có khách</div>
+        </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Tạo hóa đơn mới?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn tạo hóa đơn cho bàn?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button id="confirmDeleteButton" type="button" class="btn btn-primary">Tạo</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<ul class="tableList"></div>
+    
+        {{#each tables}} 
+            <li class="tableicons">
+                <div class="chairs">
+                    <div class="chair"></div>
+                    <div class="chair"></div>
+                </div>
+                <button class="tableIcon" id="{{this._id}}" onclick="location.href='stafforder/{{this.orderId}}'" data-toggle="modal" data-name="{{this.name}}" data-id ="{{this._id}}"></button>
+                <div class="chairs">
+                    <div class="chair"></div>
+                    <div class="chair"></div>
+                </div>
+                <div class="tableName">{{this.name}}</div>
+            </li>
+            <script>
+                if({{this.status}}){
+                    document.getElementById('{{this._id}}').style.backgroundColor = "green"
+                    document.getElementById('{{this._id}}').setAttribute('data-target', '#exampleModalCenter2')
+                    document.getElementById('{{this._id}}').onclick = ""
+                }
+                else{
+                    document.getElementById('{{this._id}}').style.backgroundColor = "red"
+                }
+                
+            </script>
+        {{/each}}
+</ul>
+
+<form method="POST" name="formxoaban"></form>
+
+<script>
+    
+
+    document.addEventListener('DOMContentLoaded', function(){
+        let ingredientId
+        let nametable
+        let formxoanguyenlieu = document.forms['formxoaban']
+        let confirmDeleteButton = document.getElementById('confirmDeleteButton')
+
+        $('#exampleModalCenter2').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        ingredientId = button.data('id')
+        nametable = button.data('name')
+    
+        confirmDeleteButton.onclick = () => {
+            const input = `<input type="hidden" name="name" value="${nametable}">`
+            formxoanguyenlieu.innerHTML += input
+            formxoanguyenlieu.action = '/staff/create/' + ingredientId
+            formxoanguyenlieu.submit()
+        }
+        
+    })
+    })
+
+    
+</script>
+
